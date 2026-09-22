@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 app = FastAPI()
 
 @app.get ('/')
@@ -10,11 +11,16 @@ def root():
 def health_check():
     return {'status':'healthy'}
 
-from pydantic import BaseModel
 class PracticeAnswer(BaseModel):
     question_id: int
     answer: str
 
 @app.post('/practice/answer')
 def practice_answer(data: PracticeAnswer):
-    return {"message": "We received the answer successfully"}
+    return {'message':'we receved it successfully',
+    'question_id':data.question_id,
+    'answer':data.answer}
+
+
+
+
