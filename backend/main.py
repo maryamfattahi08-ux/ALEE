@@ -4,6 +4,10 @@ from backend.models import LearnerProfile
 from backend.services.level_estimator import estimate_initial_level
 from backend.models import ExternalDiagnosticResult
 from fastapi.middleware.cors import CORSMiddleware
+from backend.diagnostic_store import (
+    save_diagnostic_result,
+    get_latest_diagnostic_result
+)
 
 app = FastAPI()
 
@@ -57,7 +61,24 @@ def analyze_learner(profile: LearnerProfile):
 def receive_diagnostic_result(
     result: ExternalDiagnosticResult
 ):
+
+    saved_result = save_diagnostic_result(result)
+
     return {
-        "message": "Diagnostic result received successfully",
+        "message": "Diagnostic result saved successfully",
+        "diagnostic_result": saved_result
+    }
+
+@app.get('/diagnostic/latest')
+def get_latest_diagnostic():
+
+    result = get_latest_diagnostic_result()
+
+    if result is None:
+        return {
+            "message": "No diagnostic result found"
+        }
+
+    return {
         "diagnostic_result": result
     }
