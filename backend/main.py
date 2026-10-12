@@ -1,12 +1,23 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from backend.models import LearnerProfile
-from backend.services.level_estimator import estimate_initial_level
-from backend.models import ExternalDiagnosticResult
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+from backend.models import (
+    LearnerProfile,
+    ExternalDiagnosticResult,
+)
+
+from backend.services.level_estimator import estimate_initial_level
+from backend.services.prediction_comparator import compare_prediction
+
 from backend.diagnostic_store import (
     save_diagnostic_result,
-    get_latest_diagnostic_result
+    get_latest_diagnostic_result,
+)
+
+from backend.estimate_store import (
+    save_estimate,
+    get_estimate,
 )
 
 app = FastAPI()
@@ -48,8 +59,9 @@ def create_learner_profile(profile: LearnerProfile):
 
 @app.post('/learner/analyze')
 def analyze_learner(profile: LearnerProfile):
-
     estimate = estimate_initial_level(profile)
+
+    save_estimate(estimate)
 
     return {
         "learner": profile,
@@ -82,3 +94,30 @@ def get_latest_diagnostic():
     return {
         "diagnostic_result": result
     }
+
+@app.get("/learner/{learner_id}/prediction-comparison")
+def get_prediction_comparison(learner_id: int):
+
+    estimate = get_estimate(learner_id)
+
+    if estimate is None:
+        return {
+            "message": "No initial estimate found for this learner",
+            "learner_id": learner_id
+        }
+
+    diagnostic = get_latest_diagnostic_result()
+
+    if diagnostic is None:
+        return {
+            "message": "No diagnostic result found",
+            "learner_id": learner_id
+        }
+
+    if diagnostic.learner_id != learner_id:
+        return {
+            "message": "No diagnostic result found for this learner",
+            "learner_id": learner_id
+        }
+
+    return compare_prediction(estimate, diagnostic)
