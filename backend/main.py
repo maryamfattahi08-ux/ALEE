@@ -19,8 +19,15 @@ from backend.estimate_store import (
     save_estimate,
     get_estimate,
 )
+from contextlib import asynccontextmanager
+from backend.database import initialize_database
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    initialize_database()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -106,7 +113,7 @@ def get_prediction_comparison(learner_id: int):
             "learner_id": learner_id
         }
 
-    diagnostic = get_latest_diagnostic_result()
+    diagnostic = get_latest_diagnostic_result(learner_id)
 
     if diagnostic is None:
         return {
