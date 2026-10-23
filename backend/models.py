@@ -79,3 +79,18 @@ class ExternalDiagnosticResult(BaseModel):
     incorrect_answers: int
     skill_results: list[SkillResult]
     question_results: list[QuestionResult]
+
+
+from typing import Literal
+from pydantic import BaseModel, Field
+
+
+class QuizAnswer(BaseModel):
+    question_id: int
+    selected_option: str
+
+
+class QuizSubmission(BaseModel):
+    learner_id: int
+    method: Literal["music", "story", "animation"]
+    answers: list[QuizAnswer] = Field(min_length=6, max_length=6)
