@@ -332,3 +332,64 @@ def get_learner_experiment_results(learner_id: int):
             for result in results
         ],
     }
+
+@app.get("/experiments/comparison/{learner_id}")
+def compare_learning_methods(learner_id: int):
+    if learner_id <= 0:
+        raise HTTPException(
+            status_code=422,
+            detail="learner_id must be positive.",
+        )
+
+    results = get_experiment_results(learner_id)
+    methods = ("music", "story", "animation")
+    comparison = {}
+
+    for method in methods:
+        method_results = [
+            result
+            for result in results
+            if result["method"] == method
+        ]
+
+        if not method_results:
+            comparison[method] = {
+                "status": "not_completed",
+                "attempts": 0,
+                "latest_result": None,
+            }
+            continue
+
+        latest = method_results[-1]
+        total_questions = latest["total_questions"]
+
+        comparison[method] = {
+            "status": "completed",
+            "attempts": len(method_results),
+            "latest_result": {
+                "score": latest["score"],
+                "total_questions": total_questions,
+                "percentage": round(
+                    latest["score"] / total_questions * 100,
+                    2,
+                ),
+                "created_at": latest["created_at"],
+            },
+        }
+
+    completed_methods = [
+        method
+        for method in methods
+        if comparison[method]["status"] == "completed"
+    ]
+
+    return {
+        "learner_id": learner_id,
+        "completed_methods": completed_methods,
+        "all_methods_completed": len(completed_methods) == 3,
+        "comparison": comparison,
+        "interpretation": (
+            "Scores describe quiz performance only. "
+            "They do not establish which learning method is best."
+        ),
+    }
