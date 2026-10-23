@@ -75,3 +75,22 @@ def initialize_database() -> None:
                 updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         """)
+
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS learner_profiles (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                age INTEGER NOT NULL,
+                goal TEXT NOT NULL,
+                years_learning INTEGER NOT NULL,
+                days_per_week INTEGER NOT NULL,
+                minutes_per_session INTEGER NOT NULL,
+                learning_consistency TEXT NOT NULL,
+                learning_mode TEXT NOT NULL,
+                formal_learning INTEGER NOT NULL,
+                self_study INTEGER NOT NULL,
+                skills_practiced TEXT NOT NULL,
+                previous_level TEXT NOT NULL,
+                recent_breaks TEXT NOT NULL
+            )
+        """)

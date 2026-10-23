@@ -1,5 +1,6 @@
 
 from contextlib import asynccontextmanager
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,6 +14,7 @@ from backend.models import (
 
 from backend.services.level_estimator import estimate_initial_level
 from backend.services.prediction_comparator import compare_prediction
+
 from backend.services.vocabulary_quiz import (
     QUIZZES,
     get_quiz,
@@ -30,6 +32,7 @@ from backend.estimate_store import (
 )
 
 from backend.database import initialize_database
+
 from backend.experiment_store import (
     save_experiment_result,
     get_experiment_results,
@@ -39,10 +42,18 @@ from backend.learning_stage_store import (
     save_learning_stage,
     get_learning_stage,
 )
+
 from backend.services.learning_flow import get_next_step
+
 from backend.services.experiment_analyzer import (
     analyze_experiment_results,
 )
+
+from backend.services.ai_feedback import (
+    generate_experiment_feedback,
+)
+from backend.services.method_recommender import recommend_method
+from backend.profile_store import save_profile, get_profile
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -64,9 +75,6 @@ app.add_middleware(
 )
 
 
-from typing import Literal
-
-
 class LearningStageRequest(BaseModel):
     learner_id: int
     stage: Literal[
@@ -79,6 +87,11 @@ class LearningStageRequest(BaseModel):
     method: Literal["music", "story", "animation"] | None = None
 
 
+class PracticeAnswer(BaseModel):
+    question_id: int
+    answer: str
+
+
 @app.get("/")
 def root():
     return {"message": "ALEE backend is running"}
@@ -87,11 +100,6 @@ def root():
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
-
-
-class PracticeAnswer(BaseModel):
-    question_id: int
-    answer: str
 
 
 @app.get("/learner/{learner_id}/learning-stage")
@@ -131,7 +139,10 @@ def update_learning_stage(data: LearningStageRequest):
         next_step = get_next_step(data.stage)
 
     except ValueError as error:
-        raise HTTPException(status_code=422, detail=str(error))
+        raise HTTPException(
+            status_code=422,
+            detail=str(error),
+        ) from error
 
     if (
         next_step.get("url")
@@ -182,6 +193,7 @@ def read_next_step(learner_id: int):
         "next_step": next_step,
     }
 
+
 @app.post("/practice/answer")
 def practice_answer(data: PracticeAnswer):
     return {
@@ -193,9 +205,11 @@ def practice_answer(data: PracticeAnswer):
 
 @app.post("/learner/profile")
 def create_learner_profile(profile: LearnerProfile):
+    saved_profile = save_profile(profile)
+
     return {
-        "message": "Learner profile received successfully",
-        "learner": profile,
+        "message": "Learner profile saved successfully",
+        "learner": saved_profile,
     }
 
 
@@ -292,7 +306,10 @@ def submit_experiment(data: QuizSubmission):
     try:
         result = calculate_score(data.method, answers)
     except ValueError as error:
-        raise HTTPException(status_code=422, detail=str(error))
+        raise HTTPException(
+            status_code=422,
+            detail=str(error),
+        ) from error
 
     saved_result = save_experiment_result(
         learner_id=data.learner_id,
@@ -335,6 +352,7 @@ def get_learner_experiment_results(learner_id: int):
         ],
     }
 
+
 @app.get("/experiments/comparison/{learner_id}")
 def compare_learning_methods(learner_id: int):
     if learner_id <= 0:
@@ -371,9 +389,13 @@ def compare_learning_methods(learner_id: int):
             "latest_result": {
                 "score": latest["score"],
                 "total_questions": total_questions,
-                "percentage": round(
-                    latest["score"] / total_questions * 100,
-                    2,
+                "percentage": (
+                    round(
+                        latest["score"] / total_questions * 100,
+                        2,
+                    )
+                    if total_questions > 0
+                    else None
                 ),
                 "created_at": latest["created_at"],
             },
@@ -455,6 +477,7 @@ def recommend_next_step(learner_id: int):
         "remaining_methods": remaining_methods,
     }
 
+
 @app.get("/experiments/analysis/{learner_id}")
 def analyze_learner_experiments(learner_id: int):
     if learner_id <= 0:
@@ -464,10 +487,70 @@ def analyze_learner_experiments(learner_id: int):
         )
 
     results = get_experiment_results(learner_id)
-
     analysis = analyze_experiment_results(results)
 
     return {
         "learner_id": learner_id,
         "analysis": analysis,
     }
+
+
+@app.get("/experiments/feedback/{learner_id}")
+def get_experiment_feedback(learner_id: int):
+    if learner_id <= 0:
+        raise HTTPException(
+            status_code=422,
+            detail="learner_id must be positive.",
+        )
+
+    results = get_experiment_results(learner_id)
+    analysis = analyze_experiment_results(results)
+    feedback = generate_experiment_feedback(analysis)
+
+    return {
+        "learner_id": learner_id,
+        "analysis": analysis,
+        "personalized_feedback": feedback,
+    }
+
+@app.post("/learner/recommend-method")
+def recommend_learning_method(profile: LearnerProfile):
+    return recommend_method(profile.model_dump())
+
+
+@app.get("/learner/{learner_id}/recommend-method")
+def recommend_saved_learning_method(learner_id: int):
+    if learner_id <= 0:
+        raise HTTPException(
+            status_code=422,
+            detail="learner_id must be positive.",
+        )
+
+    profile = get_profile(learner_id)
+
+    if profile is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Learner profile not found.",
+        )
+
+    return recommend_method(profile.model_dump())
+
+
+@app.get("/learner/{learner_id}/profile")
+def read_learner_profile(learner_id: int):
+    if learner_id <= 0:
+        raise HTTPException(
+            status_code=422,
+            detail="learner_id must be positive.",
+        )
+
+    profile = get_profile(learner_id)
+
+    if profile is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Learner profile not found.",
+        )
+
+    return {"learner": profile}
