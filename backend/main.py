@@ -40,7 +40,9 @@ from backend.learning_stage_store import (
     get_learning_stage,
 )
 from backend.services.learning_flow import get_next_step
-
+from backend.services.experiment_analyzer import (
+    analyze_experiment_results,
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -392,4 +394,80 @@ def compare_learning_methods(learner_id: int):
             "Scores describe quiz performance only. "
             "They do not establish which learning method is best."
         ),
+    }
+
+
+@app.get("/learner/{learner_id}/recommended-next-step")
+def recommend_next_step(learner_id: int):
+    if learner_id <= 0:
+        raise HTTPException(
+            status_code=422,
+            detail="learner_id must be positive.",
+        )
+
+    results = get_experiment_results(learner_id)
+    methods = ("music", "story", "animation")
+
+    completed_methods = {
+        result["method"]
+        for result in results
+        if result["method"] in methods
+    }
+
+    remaining_methods = [
+        method
+        for method in methods
+        if method not in completed_methods
+    ]
+
+    if not results:
+        stage = "content_learning"
+        method = "music"
+        reason = (
+            "No vocabulary quiz results have been recorded yet. "
+            "Music is suggested as the first activity."
+        )
+    elif remaining_methods:
+        stage = "content_learning"
+        method = remaining_methods[0]
+        reason = (
+            "This method has no recorded vocabulary quiz result yet."
+        )
+    else:
+        stage = "results_review"
+        method = None
+        reason = (
+            "All three methods have recorded vocabulary quiz results. "
+            "Review the results before drawing conclusions."
+        )
+
+    next_step = get_next_step(stage)
+
+    return {
+        "learner_id": learner_id,
+        "recommended_stage": stage,
+        "recommended_method": method,
+        "reason": reason,
+        "next_step": next_step,
+        "completed_methods": [
+            item for item in methods if item in completed_methods
+        ],
+        "remaining_methods": remaining_methods,
+    }
+
+@app.get("/experiments/analysis/{learner_id}")
+def analyze_learner_experiments(learner_id: int):
+    if learner_id <= 0:
+        raise HTTPException(
+            status_code=422,
+            detail="learner_id must be positive.",
+        )
+
+    results = get_experiment_results(learner_id)
+
+    analysis = analyze_experiment_results(results)
+
+    return {
+        "learner_id": learner_id,
+        "analysis": analysis,
     }
