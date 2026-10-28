@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>ALEE | Your Learning Companion</title>
 
     <style>
@@ -106,6 +105,12 @@
             opacity: 0.9;
         }
 
+        .button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
+        }
+
         .primary {
             background: #7546c8;
             color: white;
@@ -184,7 +189,7 @@
         <div class="buttons">
             <a
                 class="button primary"
-                href="http://127.0.0.1:5500/index.html"
+                href="https://alee-placement-test.onrender.com/"
                 target="_blank"
                 rel="noopener noreferrer"
             >
@@ -207,7 +212,8 @@
     </footer>
 
     <script>
-        const API_BASE = "http://127.0.0.1:8000";
+        // Public ALEE backend on Render
+        const API_BASE = "https://alee-jcae.onrender.com";
 
         const message = document.getElementById("message");
         const status = document.getElementById("status");
@@ -215,7 +221,11 @@
         const refreshButton = document.getElementById("refreshButton");
 
         function addResultLine(label, value) {
-            if (value === undefined || value === null || value === "") {
+            if (
+                value === undefined ||
+                value === null ||
+                value === ""
+            ) {
                 return;
             }
 
@@ -224,7 +234,10 @@
 
             strong.textContent = label + ": ";
             line.appendChild(strong);
-            line.appendChild(document.createTextNode(String(value)));
+            line.appendChild(
+                document.createTextNode(String(value))
+            );
+
             resultBox.appendChild(line);
         }
 
@@ -235,11 +248,12 @@
                 );
 
                 if (!response.ok) {
-                    throw new Error(`Backend returned ${response.status}`);
+                    throw new Error(
+                        `Backend returned ${response.status}`
+                    );
                 }
 
                 const data = await response.json();
-
                 const nextStep = data.next_step;
 
                 if (nextStep && nextStep.message) {
@@ -250,12 +264,16 @@
                 }
 
                 status.textContent = "ALEE backend connected.";
+                return true;
             } catch (error) {
                 message.textContent =
-                    "Start the backend, then refresh this page.";
+                    "Could not load your next learning step.";
 
                 status.textContent =
-                    "Could not connect to the ALEE backend at " + API_BASE;
+                    "The backend may be starting, or its endpoint may need checking. Please try refreshing.";
+
+                console.error("Next-step request failed:", error);
+                return false;
             }
         }
 
@@ -274,51 +292,107 @@
                         "No placement-test result has been saved yet.";
 
                     status.textContent =
-                        "Complete the English placement test, then return here and refresh your results.";
+                        "Complete the test. If you have already completed it, verify that the test sends its result to ALEE.";
+
                     return;
                 }
 
                 if (!response.ok) {
-                    throw new Error(`Backend returned ${response.status}`);
+                    throw new Error(
+                        `Backend returned ${response.status}`
+                    );
                 }
 
                 const data = await response.json();
 
-                // Supports either a direct result object or a wrapped result.
-                const result = data.result ?? data.diagnostic_result ?? data;
+                const result =
+                    data.result ??
+                    data.diagnostic_result ??
+                    data;
 
-                addResultLine("English level", result.level ?? result.cefr_level ?? result.overall_level);
-                addResultLine("Overall score", result.score ?? result.percentage ?? result.overall_percentage);
-                addResultLine("Correct answers", result.correct_answers ?? result.correct);
-                addResultLine("Incorrect answers", result.incorrect_answers ?? result.incorrect);
-                addResultLine("Total questions", result.total_questions ?? result.total);
+                addResultLine(
+                    "English level",
+                    result.level ??
+                    result.cefr_level ??
+                    result.overall_level
+                );
 
-                const skills = result.skills ?? result.skill_results;
+                addResultLine(
+                    "Overall score",
+                    result.score ??
+                    result.percentage ??
+                    result.overall_percentage
+                );
 
-                if (skills && typeof skills === "object") {
+                addResultLine(
+                    "Correct answers",
+                    result.correct_answers ?? result.correct
+                );
+
+                addResultLine(
+                    "Incorrect answers",
+                    result.incorrect_answers ?? result.incorrect
+                );
+
+                addResultLine(
+                    "Total questions",
+                    result.total_questions ?? result.total
+                );
+
+                const skills =
+                    result.skills ?? result.skill_results;
+
+                if (
+                    skills &&
+                    typeof skills === "object" &&
+                    !Array.isArray(skills)
+                ) {
                     const heading = document.createElement("h3");
                     heading.textContent = "Skill results";
                     resultBox.appendChild(heading);
 
-                    for (const [skillName, skillData] of Object.entries(skills)) {
-                        const details = typeof skillData === "object" && skillData !== null
-                            ? [
-                                skillData.level ? `Level: ${skillData.level}` : null,
-                                skillData.percentage != null ? `Score: ${skillData.percentage}%` : null,
-                                skillData.score != null ? `Score: ${skillData.score}` : null
-                              ].filter(Boolean).join(" | ")
-                            : String(skillData);
+                    for (
+                        const [skillName, skillData]
+                        of Object.entries(skills)
+                    ) {
+                        let details;
+
+                        if (
+                            typeof skillData === "object" &&
+                            skillData !== null
+                        ) {
+                            details = [
+                                skillData.level
+                                    ? `Level: ${skillData.level}`
+                                    : null,
+
+                                skillData.percentage != null
+                                    ? `Score: ${skillData.percentage}%`
+                                    : null,
+
+                                skillData.score != null
+                                    ? `Score: ${skillData.score}`
+                                    : null
+                            ].filter(Boolean).join(" | ");
+                        } else {
+                            details = String(skillData);
+                        }
 
                         addResultLine(skillName, details);
                     }
                 }
 
                 if (!resultBox.hasChildNodes()) {
-                    addResultLine("Saved result", "A result was received, but its field names need to be matched to the backend response.");
+                    addResultLine(
+                        "Saved result",
+                        "A result was returned, but its field names need to be matched to the backend response."
+                    );
                 }
 
                 resultBox.classList.remove("hidden");
-                message.textContent = "Your latest placement-test result";
+                message.textContent =
+                    "Your latest placement-test result";
+
                 status.textContent =
                     "Result retrieved from the ALEE backend.";
             } catch (error) {
@@ -326,7 +400,9 @@
                     "Your result could not be loaded.";
 
                 status.textContent =
-                    "Check that the backend is running and that GET /diagnostic/latest is available.";
+                    "The backend request failed. Check the endpoint and browser console for details.";
+
+                console.error("Latest-result request failed:", error);
             }
         }
 
@@ -334,16 +410,21 @@
             refreshButton.disabled = true;
             refreshButton.textContent = "Refreshing...";
 
-            await Promise.all([
-                loadNextStep(),
-                loadLatestResult()
-            ]);
-
-            refreshButton.disabled = false;
-            refreshButton.textContent = "Refresh My Results";
+            try {
+                await Promise.all([
+                    loadNextStep(),
+                    loadLatestResult()
+                ]);
+            } finally {
+                refreshButton.disabled = false;
+                refreshButton.textContent = "Refresh My Results";
+            }
         }
 
-        refreshButton.addEventListener("click", refreshPageData);
+        refreshButton.addEventListener(
+            "click",
+            refreshPageData
+        );
 
         refreshPageData();
     </script>
