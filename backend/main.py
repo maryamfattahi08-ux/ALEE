@@ -68,7 +68,8 @@ app.add_middleware(
     allow_origins=[
         "http://127.0.0.1:5500",
         "http://localhost:5500",
-        "https://alee-frontend.onrender.com"
+        "https://alee-frontend.onrender.com",
+        "https://alee-placement-test.onrender.com"
     ],
     allow_credentials=True,
     allow_methods=["*"],
