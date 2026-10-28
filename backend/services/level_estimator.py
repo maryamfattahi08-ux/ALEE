@@ -1,3 +1,4 @@
+
 from backend.models import LearnerProfile, InitialLevelEstimate
 
 
@@ -48,10 +49,8 @@ def estimate_initial_level(
     if previous_level:
         if previous_level in estimated_level:
             evidence_alignment = "compatible"
-
         else:
             evidence_alignment = "mismatch"
-
     else:
         evidence_alignment = "no_previous_level"
 
@@ -70,5 +69,5 @@ def estimate_initial_level(
         learner_id=profile.id,
         estimated_level=estimated_level,
         confidence=confidence,
-        evidence=evidence
+        evidence=evidence,
     )
