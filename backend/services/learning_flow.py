@@ -3,7 +3,7 @@ from typing import Literal
 
 
 # Replace this placeholder with your real public placement-test URL.
-PLACEMENT_TEST_URL = "REPLACE_WITH_PLACEMENT_TEST_URL"
+PLACEMENT_TEST_URL = "http://127.0.0.1:5500/index.html"
 
 # Public website containing the animation, music, and story activities.
 CONTENT_WEBSITE_URL = "https://sea-turtle-wwl4g4.my.canva.site/"

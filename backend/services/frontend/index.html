@@ -1,0 +1,352 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ALEE | Your Learning Companion</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f4eaff, #e7dcff);
+            color: #30204a;
+        }
+
+        header {
+            padding: 22px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #7546c8;
+            letter-spacing: 2px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 25px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(30px, 5vw, 46px);
+            margin-bottom: 18px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #675778;
+            margin-bottom: 35px;
+        }
+
+        .status-box {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 22px;
+            border-radius: 16px;
+            margin: 25px auto;
+            max-width: 650px;
+            box-shadow: 0 6px 20px rgba(70, 35, 120, 0.08);
+            overflow-wrap: anywhere;
+        }
+
+        #status {
+            font-size: 14px;
+            color: #675778;
+            margin-top: 12px;
+        }
+
+        #result {
+            text-align: left;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            opacity: 0.9;
+        }
+
+        .primary {
+            background: #7546c8;
+            color: white;
+        }
+
+        .secondary {
+            background: white;
+            color: #7546c8;
+            border: 2px solid #7546c8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #675778;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                margin: 25px auto;
+            }
+
+            header {
+                padding: 18px 5%;
+                flex-wrap: wrap;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">ALEE</div>
+        <div>Your Learning Companion</div>
+    </header>
+
+    <main>
+        <h1>Your learning journey starts here.</h1>
+
+        <p class="subtitle">
+            Discover your current English level and explore learning
+            activities designed to make learning more engaging.
+        </p>
+
+        <section class="status-box">
+            <h2>Your Learning Journey</h2>
+
+            <p id="message" aria-live="polite">
+                Connecting to ALEE...
+            </p>
+
+            <p id="status">
+                Checking backend connection...
+            </p>
+
+            <div id="result" class="hidden"></div>
+
+            <button
+                id="refreshButton"
+                class="button secondary"
+                type="button"
+            >
+                Refresh My Results
+            </button>
+        </section>
+
+        <div class="buttons">
+            <a
+                class="button primary"
+                href="http://127.0.0.1:5500/index.html"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Start English Placement Test
+            </a>
+
+            <a
+                class="button secondary"
+                href="https://sea-turtle-wwl4g4.my.canva.site/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Open Learning Activities
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        ALEE — Adaptive Learning Experience Engine
+    </footer>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:8000";
+
+        const message = document.getElementById("message");
+        const status = document.getElementById("status");
+        const resultBox = document.getElementById("result");
+        const refreshButton = document.getElementById("refreshButton");
+
+        function addResultLine(label, value) {
+            if (value === undefined || value === null || value === "") {
+                return;
+            }
+
+            const line = document.createElement("p");
+            const strong = document.createElement("strong");
+
+            strong.textContent = label + ": ";
+            line.appendChild(strong);
+            line.appendChild(document.createTextNode(String(value)));
+            resultBox.appendChild(line);
+        }
+
+        async function loadNextStep() {
+            try {
+                const response = await fetch(
+                    `${API_BASE}/learner/1/next-step`
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Backend returned ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                const nextStep = data.next_step;
+
+                if (nextStep && nextStep.message) {
+                    message.textContent = nextStep.message;
+                } else {
+                    message.textContent =
+                        "Complete your English placement test to begin your learning journey.";
+                }
+
+                status.textContent = "ALEE backend connected.";
+            } catch (error) {
+                message.textContent =
+                    "Start the backend, then refresh this page.";
+
+                status.textContent =
+                    "Could not connect to the ALEE backend at " + API_BASE;
+            }
+        }
+
+        async function loadLatestResult() {
+            resultBox.replaceChildren();
+            resultBox.classList.add("hidden");
+
+            try {
+                const response = await fetch(
+                    `${API_BASE}/diagnostic/latest`,
+                    { cache: "no-store" }
+                );
+
+                if (response.status === 404) {
+                    message.textContent =
+                        "No placement-test result has been saved yet.";
+
+                    status.textContent =
+                        "Complete the English placement test, then return here and refresh your results.";
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`Backend returned ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Supports either a direct result object or a wrapped result.
+                const result = data.result ?? data.diagnostic_result ?? data;
+
+                addResultLine("English level", result.level ?? result.cefr_level ?? result.overall_level);
+                addResultLine("Overall score", result.score ?? result.percentage ?? result.overall_percentage);
+                addResultLine("Correct answers", result.correct_answers ?? result.correct);
+                addResultLine("Incorrect answers", result.incorrect_answers ?? result.incorrect);
+                addResultLine("Total questions", result.total_questions ?? result.total);
+
+                const skills = result.skills ?? result.skill_results;
+
+                if (skills && typeof skills === "object") {
+                    const heading = document.createElement("h3");
+                    heading.textContent = "Skill results";
+                    resultBox.appendChild(heading);
+
+                    for (const [skillName, skillData] of Object.entries(skills)) {
+                        const details = typeof skillData === "object" && skillData !== null
+                            ? [
+                                skillData.level ? `Level: ${skillData.level}` : null,
+                                skillData.percentage != null ? `Score: ${skillData.percentage}%` : null,
+                                skillData.score != null ? `Score: ${skillData.score}` : null
+                              ].filter(Boolean).join(" | ")
+                            : String(skillData);
+
+                        addResultLine(skillName, details);
+                    }
+                }
+
+                if (!resultBox.hasChildNodes()) {
+                    addResultLine("Saved result", "A result was received, but its field names need to be matched to the backend response.");
+                }
+
+                resultBox.classList.remove("hidden");
+                message.textContent = "Your latest placement-test result";
+                status.textContent =
+                    "Result retrieved from the ALEE backend.";
+            } catch (error) {
+                message.textContent =
+                    "Your result could not be loaded.";
+
+                status.textContent =
+                    "Check that the backend is running and that GET /diagnostic/latest is available.";
+            }
+        }
+
+        async function refreshPageData() {
+            refreshButton.disabled = true;
+            refreshButton.textContent = "Refreshing...";
+
+            await Promise.all([
+                loadNextStep(),
+                loadLatestResult()
+            ]);
+
+            refreshButton.disabled = false;
+            refreshButton.textContent = "Refresh My Results";
+        }
+
+        refreshButton.addEventListener("click", refreshPageData);
+
+        refreshPageData();
+    </script>
+</body>
+</html>
+```
