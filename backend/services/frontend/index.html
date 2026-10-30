@@ -163,7 +163,165 @@
             Discover your current English level and explore learning
             activities designed to make learning more engaging.
         </p>
+<section class="status-box" id="interviewSection">
+    <h2>Tell ALEE About Your Learning Journey</h2>
 
+    <p>
+        Answer these questions so ALEE can estimate your starting
+        level before you take the placement test.
+    </p>
+
+    <form id="interviewForm">
+        <label for="learnerName">Your name</label>
+        <input
+            id="learnerName"
+            name="name"
+            type="text"
+            required
+        >
+
+        <label for="learnerAge">Your age</label>
+        <input
+            id="learnerAge"
+            name="age"
+            type="number"
+            min="1"
+            max="120"
+            required
+        >
+
+        <label for="learningGoal">What is your main goal?</label>
+        <textarea
+            id="learningGoal"
+            name="goal"
+            required
+            placeholder="For example: improve speaking or prepare for IELTS"
+        ></textarea>
+
+        <label for="yearsLearning">Years learning English</label>
+        <input
+            id="yearsLearning"
+            name="years_learning"
+            type="number"
+            min="0"
+            max="100"
+            value="0"
+            required
+        >
+
+        <label for="daysPerWeek">Study days per week</label>
+        <input
+            id="daysPerWeek"
+            name="days_per_week"
+            type="number"
+            min="0"
+            max="7"
+            value="3"
+            required
+        >
+
+        <label for="minutesPerSession">Minutes per study session</label>
+        <input
+            id="minutesPerSession"
+            name="minutes_per_session"
+            type="number"
+            min="0"
+            max="1440"
+            value="30"
+            required
+        >
+
+        <label for="consistency">How consistent is your learning?</label>
+        <select
+            id="consistency"
+            name="learning_consistency"
+            required
+        >
+            <option value="high">Consistent most weeks</option>
+            <option value="medium" selected>Some interruptions</option>
+            <option value="low">Often irregular</option>
+        </select>
+
+        <label for="learningMode">How do you usually learn?</label>
+        <select
+            id="learningMode"
+            name="learning_mode"
+            required
+        >
+            <option value="active">
+                Active practice (speaking, writing, exercises)
+            </option>
+            <option value="passive">
+                Mostly passive learning (watching or reading)
+            </option>
+            <option value="mixed">
+                A mix of active and passive learning
+            </option>
+        </select>
+
+        <label>
+            <input
+                id="formalLearning"
+                name="formal_learning"
+                type="checkbox"
+            >
+            I have attended formal English classes
+        </label>
+
+        <label>
+            <input
+                id="selfStudy"
+                name="self_study"
+                type="checkbox"
+                checked
+            >
+            I study English independently
+        </label>
+
+        <label for="skillsPracticed">
+            Which skills have you practised?
+        </label>
+        <textarea
+            id="skillsPracticed"
+            name="skills_practiced"
+            required
+            placeholder="For example: listening, reading, speaking, writing, grammar"
+        ></textarea>
+
+        <label for="previousLevel">
+            Previous English level, if known
+        </label>
+        <select id="previousLevel" name="previous_level">
+            <option value="unknown" selected>Not sure</option>
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+        </select>
+
+        <label for="recentBreaks">
+            Have you taken breaks from learning?
+        </label>
+        <textarea
+            id="recentBreaks"
+            name="recent_breaks"
+            placeholder="For example: stopped for six months, or no major breaks"
+        ></textarea>
+
+        <button
+            class="button primary"
+            id="submitInterview"
+            type="submit"
+        >
+            Submit Interview and Estimate My Level
+        </button>
+
+        <p id="interviewMessage" aria-live="polite"></p>
+        <div id="estimateResult" class="hidden"></div>
+    </form>
+</section>
         <section class="status-box">
             <h2>Your Learning Journey</h2>
 
@@ -188,13 +346,14 @@
 
         <div class="buttons">
             <a
-                class="button primary"
-                href="https://alee-placement-test.onrender.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Start English Placement Test
-            </a>
+    id="placementTestLink"
+    class="button primary"
+    href="https://alee-placement-test.onrender.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+>
+    Start English Placement Test
+</a>
 
             <a
                 class="button secondary"
@@ -219,7 +378,138 @@
         const status = document.getElementById("status");
         const resultBox = document.getElementById("result");
         const refreshButton = document.getElementById("refreshButton");
+const interviewForm = document.getElementById("interviewForm");
+const interviewMessage = document.getElementById("interviewMessage");
+const estimateResult = document.getElementById("estimateResult");
+const placementTestLink = document.getElementById("placementTestLink");
 
+// Keep the same learner ID in this browser.
+function getLearnerId() {
+    const storageKey = "alee_learner_id";
+    let learnerId = Number(localStorage.getItem(storageKey));
+
+    if (!Number.isSafeInteger(learnerId) || learnerId <= 0) {
+        learnerId = Date.now();
+        localStorage.setItem(storageKey, String(learnerId));
+    }
+
+    return learnerId;
+}
+
+function showEstimate(estimate) {
+    estimateResult.replaceChildren();
+
+    const heading = document.createElement("h3");
+    heading.textContent = "Your Initial Level Estimate";
+    estimateResult.appendChild(heading);
+
+    const details = [
+        ["Estimated level", estimate.estimated_level],
+        ["Confidence score", `${estimate.confidence}%`],
+        ["Evidence", estimate.evidence]
+    ];
+
+    for (const [label, value] of details) {
+        const paragraph = document.createElement("p");
+        const strong = document.createElement("strong");
+
+        strong.textContent = `${label}: `;
+        paragraph.appendChild(strong);
+        paragraph.appendChild(
+            document.createTextNode(String(value ?? "Not available"))
+        );
+
+        estimateResult.appendChild(paragraph);
+    }
+
+    estimateResult.classList.remove("hidden");
+}
+
+interviewForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const submitButton = document.getElementById("submitInterview");
+    submitButton.disabled = true;
+    interviewMessage.textContent = "Saving your profile and estimating your level...";
+    estimateResult.classList.add("hidden");
+
+    const learnerId = getLearnerId();
+
+    const profile = {
+        id: learnerId,
+        name: interviewForm.elements.name.value.trim(),
+        age: Number(interviewForm.elements.age.value),
+        goal: interviewForm.elements.goal.value.trim(),
+        years_learning: Number(interviewForm.elements.years_learning.value),
+        days_per_week: Number(interviewForm.elements.days_per_week.value),
+        minutes_per_session: Number(interviewForm.elements.minutes_per_session.value),
+        learning_consistency: interviewForm.elements.learning_consistency.value,
+        learning_mode: interviewForm.elements.learning_mode.value,
+        formal_learning: interviewForm.elements.formal_learning.checked,
+        self_study: interviewForm.elements.self_study.checked,
+        skills_practiced: interviewForm.elements.skills_practiced.value.trim(),
+        previous_level:
+            interviewForm.elements.previous_level.value === "unknown"
+                ? ""
+                : interviewForm.elements.previous_level.value,
+        recent_breaks:
+            interviewForm.elements.recent_breaks.value.trim() ||
+            "Not specified"
+    };
+
+    try {
+        // First, save the learner profile.
+        const profileResponse = await fetch(
+            `${API_BASE}/learner/profile`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(profile)
+            }
+        );
+
+        if (!profileResponse.ok) {
+            throw new Error(
+                `Profile save failed: HTTP ${profileResponse.status}`
+            );
+        }
+
+        // Then, request the initial level estimate.
+        const estimateResponse = await fetch(
+            `${API_BASE}/learner/analyze`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(profile)
+            }
+        );
+
+        if (!estimateResponse.ok) {
+            throw new Error(
+                `Level estimate failed: HTTP ${estimateResponse.status}`
+            );
+        }
+
+        const data = await estimateResponse.json();
+
+        showEstimate(data.initial_estimate);
+
+        // Pass this learner's ID to the placement test.
+        placementTestLink.href =
+            `https://alee-placement-test.onrender.com/?learner_id=${learnerId}`;
+
+        interviewMessage.textContent =
+            "Profile saved. Your initial estimate is ready. Next, take the placement test.";
+
+    } catch (error) {
+        interviewMessage.textContent =
+            "Could not complete the interview. Please try again.";
+
+        console.error("Interview submission failed:", error);
+    } finally {
+        submitButton.disabled = false;
+    }
+});
         function addResultLine(label, value) {
             if (
                 value === undefined ||
@@ -244,7 +534,7 @@
         async function loadNextStep() {
             try {
                 const response = await fetch(
-                    `${API_BASE}/learner/1/next-step`
+                    `${API_BASE}/learner/${getLearnerId()}/next-step`
                 );
 
                 if (!response.ok) {
