@@ -1,296 +1,360 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALEE | Your Learning Companion</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALEE | Your Learning Companion</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #f4eaff, #e7dcff);
-            color: #30204a;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f4eaff, #e7dcff);
+    color: #30204a;
+}
 
-        header {
-            padding: 22px 8%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.75);
-        }
+header {
+    padding: 22px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255,255,255,.75);
+}
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #7546c8;
-            letter-spacing: 2px;
-        }
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #7546c8;
+    letter-spacing: 2px;
+}
 
-        main {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 25px;
-            text-align: center;
-        }
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 25px;
+    text-align: center;
+}
 
-        h1 {
-            font-size: clamp(30px, 5vw, 46px);
-            margin-bottom: 18px;
-        }
+h1 {
+    font-size: clamp(30px, 5vw, 46px);
+    margin-bottom: 18px;
+}
 
-        .subtitle {
-            font-size: 18px;
-            line-height: 1.7;
-            color: #675778;
-            margin-bottom: 35px;
-        }
+h2 {
+    color: #59369b;
+}
 
-        .status-box {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 22px;
-            border-radius: 16px;
-            margin: 25px auto;
-            max-width: 650px;
-            box-shadow: 0 6px 20px rgba(70, 35, 120, 0.08);
-            overflow-wrap: anywhere;
-        }
+.subtitle {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #675778;
+    margin-bottom: 35px;
+}
 
-        #status {
-            font-size: 14px;
-            color: #675778;
-            margin-top: 12px;
-        }
+.status-box {
+    background: rgba(255,255,255,.9);
+    padding: 24px;
+    border-radius: 16px;
+    margin: 25px auto;
+    max-width: 700px;
+    box-shadow: 0 6px 20px rgba(70,35,120,.08);
+    overflow-wrap: anywhere;
+}
 
-        #result {
-            text-align: left;
-            line-height: 1.8;
-            margin-top: 20px;
-        }
+label {
+    display: block;
+    text-align: left;
+    margin: 16px 0 7px;
+    font-weight: bold;
+}
 
-        .hidden {
-            display: none;
-        }
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d5c6e8;
+    border-radius: 9px;
+    font-size: 15px;
+    font-family: inherit;
+    background: white;
+    color: #30204a;
+}
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 30px;
-        }
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
 
-        .button {
-            display: inline-block;
-            padding: 15px 24px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
-        }
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: #7546c8;
+}
 
-        .button:hover {
-            transform: translateY(-3px);
-            opacity: 0.9;
-        }
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+}
 
-        .button:disabled {
-            opacity: 0.6;
-            cursor: wait;
-            transform: none;
-        }
+.button {
+    display: inline-block;
+    padding: 14px 22px;
+    border-radius: 11px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: transform .2s, opacity .2s;
+    margin-top: 12px;
+    font-family: inherit;
+}
 
-        .primary {
-            background: #7546c8;
-            color: white;
-        }
+.button:hover {
+    transform: translateY(-2px);
+    opacity: .9;
+}
 
-        .secondary {
-            background: white;
-            color: #7546c8;
-            border: 2px solid #7546c8;
-        }
+.button:disabled {
+    opacity: .6;
+    cursor: wait;
+    transform: none;
+}
 
-        footer {
-            text-align: center;
-            padding: 25px;
-            color: #675778;
-            font-size: 13px;
-        }
+.primary {
+    background: #7546c8;
+    color: white;
+}
 
-        @media (max-width: 600px) {
-            main {
-                margin: 25px auto;
-            }
+.secondary {
+    background: white;
+    color: #7546c8;
+    border: 2px solid #7546c8;
+}
 
-            header {
-                padding: 18px 5%;
-                flex-wrap: wrap;
-            }
+.method-options {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 14px;
+    margin: 25px 0;
+}
 
-            .buttons {
-                flex-direction: column;
-            }
+.method-card {
+    padding: 18px;
+    border: 2px solid #e1d5f1;
+    border-radius: 13px;
+    text-align: center;
+}
 
-            .button {
-                width: 100%;
-            }
-        }
-    </style>
+.method-card h3 {
+    color: #7546c8;
+    margin: 8px 0;
+}
+
+.method-card p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #675778;
+}
+
+.quiz-question {
+    text-align: left;
+    background: #faf7ff;
+    border: 1px solid #e5d9f5;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.quiz-question h3 {
+    margin-top: 0;
+    color: #59369b;
+}
+
+.quiz-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 9px 5px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.quiz-option input {
+    margin-top: 3px;
+}
+
+.result-card {
+    background: #f7f2ff;
+    border-radius: 12px;
+    padding: 17px;
+    margin: 15px 0;
+    text-align: left;
+    line-height: 1.7;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#message,
+#status,
+#methodMessage,
+#quizMessage,
+#interviewMessage {
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+#status {
+    font-size: 14px;
+    color: #675778;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 25px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #675778;
+    font-size: 13px;
+}
+
+@media (max-width: 650px) {
+    main {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    header {
+        padding: 18px 5%;
+        flex-wrap: wrap;
+    }
+
+    .method-options {
+        grid-template-columns: 1fr;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .button {
+        width: 100%;
+    }
+}
+</style>
 </head>
 
 <body>
-    <header>
-        <div class="logo">ALEE</div>
-        <div>Your Learning Companion</div>
-    </header>
 
-    <main>
-        <h1>Your learning journey starts here.</h1>
+<header>
+    <div class="logo">ALEE</div>
+    <div>Your Learning Companion</div>
+</header>
 
-        <p class="subtitle">
-            Discover your current English level and explore learning
-            activities designed to make learning more engaging.
-        </p>
+<main>
+
+<h1>Your learning journey starts here.</h1>
+
+<p class="subtitle">
+    Discover your current English level and explore
+    learning activities designed to make learning more engaging.
+</p>
+
+
+<!-- LEARNER INTERVIEW -->
+
 <section class="status-box" id="interviewSection">
+
     <h2>Tell ALEE About Your Learning Journey</h2>
 
     <p>
-        Answer these questions so ALEE can estimate your starting
-        level before you take the placement test.
+        Answer these questions so ALEE can estimate
+        your starting level.
     </p>
 
     <form id="interviewForm">
+
         <label for="learnerName">Your name</label>
-        <input
-            id="learnerName"
-            name="name"
-            type="text"
-            required
-        >
+        <input id="learnerName" name="name" type="text" required>
 
         <label for="learnerAge">Your age</label>
-        <input
-            id="learnerAge"
-            name="age"
-            type="number"
-            min="1"
-            max="120"
-            required
-        >
+        <input id="learnerAge" name="age" type="number"
+               min="1" max="120" required>
 
         <label for="learningGoal">What is your main goal?</label>
-        <textarea
-            id="learningGoal"
-            name="goal"
-            required
-            placeholder="For example: improve speaking or prepare for IELTS"
-        ></textarea>
+        <textarea id="learningGoal" name="goal" required
+                  placeholder="For example: improve speaking or prepare for IELTS"></textarea>
 
         <label for="yearsLearning">Years learning English</label>
-        <input
-            id="yearsLearning"
-            name="years_learning"
-            type="number"
-            min="0"
-            max="100"
-            value="0"
-            required
-        >
+        <input id="yearsLearning" name="years_learning"
+               type="number" min="0" max="100" value="0" required>
 
         <label for="daysPerWeek">Study days per week</label>
-        <input
-            id="daysPerWeek"
-            name="days_per_week"
-            type="number"
-            min="0"
-            max="7"
-            value="3"
-            required
-        >
+        <input id="daysPerWeek" name="days_per_week"
+               type="number" min="0" max="7" value="3" required>
 
         <label for="minutesPerSession">Minutes per study session</label>
-        <input
-            id="minutesPerSession"
-            name="minutes_per_session"
-            type="number"
-            min="0"
-            max="1440"
-            value="30"
-            required
-        >
+        <input id="minutesPerSession" name="minutes_per_session"
+               type="number" min="0" max="1440" value="30" required>
 
         <label for="consistency">How consistent is your learning?</label>
-        <select
-            id="consistency"
-            name="learning_consistency"
-            required
-        >
+
+        <select id="consistency" name="learning_consistency" required>
             <option value="high">Consistent most weeks</option>
             <option value="medium" selected>Some interruptions</option>
             <option value="low">Often irregular</option>
         </select>
 
         <label for="learningMode">How do you usually learn?</label>
-        <select
-            id="learningMode"
-            name="learning_mode"
-            required
-        >
-            <option value="active">
-                Active practice (speaking, writing, exercises)
-            </option>
-            <option value="passive">
-                Mostly passive learning (watching or reading)
-            </option>
-            <option value="mixed">
-                A mix of active and passive learning
-            </option>
+
+        <select id="learningMode" name="learning_mode" required>
+            <option value="active">Active practice</option>
+            <option value="passive">Mostly passive learning</option>
+            <option value="mixed">A mix of active and passive learning</option>
         </select>
 
-        <label>
-            <input
-                id="formalLearning"
-                name="formal_learning"
-                type="checkbox"
-            >
+        <label class="checkbox-label">
+            <input id="formalLearning" name="formal_learning"
+                   type="checkbox">
             I have attended formal English classes
         </label>
 
-        <label>
-            <input
-                id="selfStudy"
-                name="self_study"
-                type="checkbox"
-                checked
-            >
+        <label class="checkbox-label">
+            <input id="selfStudy" name="self_study"
+                   type="checkbox" checked>
             I study English independently
         </label>
 
         <label for="skillsPracticed">
             Which skills have you practised?
         </label>
-        <textarea
-            id="skillsPracticed"
-            name="skills_practiced"
-            required
-            placeholder="For example: listening, reading, speaking, writing, grammar"
-        ></textarea>
+
+        <textarea id="skillsPracticed" name="skills_practiced"
+                  required
+                  placeholder="Listening, reading, speaking, writing, grammar..."></textarea>
 
         <label for="previousLevel">
             Previous English level, if known
         </label>
+
         <select id="previousLevel" name="previous_level">
             <option value="unknown" selected>Not sure</option>
             <option value="A1">A1</option>
@@ -304,420 +368,1394 @@
         <label for="recentBreaks">
             Have you taken breaks from learning?
         </label>
-        <textarea
-            id="recentBreaks"
-            name="recent_breaks"
-            placeholder="For example: stopped for six months, or no major breaks"
-        ></textarea>
 
-        <button
-            class="button primary"
-            id="submitInterview"
-            type="submit"
-        >
+        <textarea id="recentBreaks" name="recent_breaks"
+                  placeholder="For example: stopped for six months, or no major breaks"></textarea>
+
+        <button class="button primary" id="submitInterview" type="submit">
             Submit Interview and Estimate My Level
         </button>
 
         <p id="interviewMessage" aria-live="polite"></p>
-        <div id="estimateResult" class="hidden"></div>
+
+        <div id="estimateResult" class="hidden result-card"></div>
+
     </form>
 </section>
-        <section class="status-box">
-            <h2>Your Learning Journey</h2>
 
-            <p id="message" aria-live="polite">
-                Connecting to ALEE...
-            </p>
 
-            <p id="status">
-                Checking backend connection...
-            </p>
+<!-- PLACEMENT TEST -->
 
-            <div id="result" class="hidden"></div>
+<section class="status-box">
 
-            <button
-                id="refreshButton"
-                class="button secondary"
-                type="button"
-            >
-                Refresh My Results
-            </button>
-        </section>
+    <h2>English Placement Test</h2>
 
-        <div class="buttons">
-            <a
-    id="placementTestLink"
-    class="button primary"
-    href="https://alee-placement-test.onrender.com/"
-    target="_blank"
-    rel="noopener noreferrer"
->
-    Start English Placement Test
-</a>
+    <p>
+        Take the placement test to receive a more detailed
+        assessment of your English level.
+    </p>
 
-            <a
-                class="button secondary"
-                href="https://sea-turtle-wwl4g4.my.canva.site/"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Open Learning Activities
-            </a>
+    <a id="placementTestLink"
+       class="button primary"
+       href="https://alee-placement-test.onrender.com/"
+       target="_blank"
+       rel="noopener noreferrer">
+
+        Start English Placement Test
+
+    </a>
+
+</section>
+
+
+<!-- THREE-METHOD LEARNING ACTIVITIES -->
+
+<section class="status-box" id="learningMethodSection">
+
+    <h2>Experience All Three Learning Methods</h2>
+
+    <p>
+        Open the learning activities and complete all three sections:
+        Music, Story, and Animation. Then return here to take all three
+        vocabulary quizzes in sequence.
+    </p>
+
+    <div class="method-options">
+
+        <div class="method-card">
+            <h3>Music</h3>
+            <p>Explore English vocabulary through music.</p>
         </div>
-    </main>
 
-    <footer>
-        ALEE — Adaptive Learning Experience Engine
-    </footer>
+        <div class="method-card">
+            <h3>Story</h3>
+            <p>Explore vocabulary through storytelling.</p>
+        </div>
 
-    <script>
-        // Public ALEE backend on Render
-        const API_BASE = "https://alee-jcae.onrender.com";
+        <div class="method-card">
+            <h3>Animation</h3>
+            <p>Explore vocabulary through animated content.</p>
+        </div>
 
-        const message = document.getElementById("message");
-        const status = document.getElementById("status");
-        const resultBox = document.getElementById("result");
-        const refreshButton = document.getElementById("refreshButton");
-const interviewForm = document.getElementById("interviewForm");
-const interviewMessage = document.getElementById("interviewMessage");
-const estimateResult = document.getElementById("estimateResult");
-const placementTestLink = document.getElementById("placementTestLink");
+    </div>
 
-// Keep the same learner ID in this browser.
+    <!-- Direct link: no JavaScript window.open() -->
+
+    <a id="learningActivitiesLink"
+       class="button primary"
+       href="https://sea-turtle-wwl4g4.my.canva.site/"
+       target="_blank"
+       rel="noopener noreferrer">
+
+        Open All Learning Activities
+
+    </a>
+
+    <p id="methodMessage" aria-live="polite">
+        Open the activities, complete all three sections, and return here.
+    </p>
+
+    <button id="startQuizButton"
+            class="button secondary"
+            type="button">
+
+        I Have Completed All Three — Start the Tests
+
+    </button>
+
+    <button id="directQuizButton"
+            class="button primary"
+            type="button">
+
+        Open Vocabulary Tests
+
+    </button>
+
+</section>
+
+
+<!-- SEQUENTIAL QUIZZES -->
+
+<section class="status-box hidden" id="quizSection">
+
+    <h2 id="quizTitle">Vocabulary Quiz</h2>
+
+    <p>
+        ALEE will give you three quizzes in sequence. Complete each quiz
+        to continue to the next one. Your final report appears after the
+        Animation quiz.
+    </p>
+
+    <form id="quizForm">
+
+        <div id="quizQuestions"></div>
+
+        <button id="submitQuizButton"
+                class="button primary"
+                type="submit">
+
+            Submit and Continue
+
+        </button>
+
+    </form>
+
+    <p id="quizMessage" aria-live="polite"></p>
+
+</section>
+
+
+<!-- RESULTS -->
+
+<section class="status-box" id="experimentResultsSection">
+
+    <h2>Your Learning Results</h2>
+
+    <p id="message" aria-live="polite">
+        Connecting to ALEE...
+    </p>
+
+    <p id="status">
+        Checking backend connection...
+    </p>
+
+    <div id="result" class="hidden"></div>
+
+    <button id="refreshButton"
+            class="button secondary"
+            type="button">
+
+        Refresh My Results
+
+    </button>
+
+</section>
+
+</main>
+
+<footer>
+    ALEE — Adaptive Learning Experience Engine
+</footer>
+
+
+<script>
+
+// ==========================================
+// API CONFIGURATION
+// ==========================================
+
+const API_BASE = "https://alee-jcae.onrender.com";
+
+const PLACEMENT_TEST_URL =
+    "https://alee-placement-test.onrender.com/";
+
+
+// ==========================================
+// DOM ELEMENTS
+// ==========================================
+
+const message = document.getElementById("message");
+const status = document.getElementById("status");
+const resultBox = document.getElementById("result");
+
+const interviewForm =
+    document.getElementById("interviewForm");
+
+const interviewMessage =
+    document.getElementById("interviewMessage");
+
+const estimateResult =
+    document.getElementById("estimateResult");
+
+const placementTestLink =
+    document.getElementById("placementTestLink");
+
+const startQuizButton =
+    document.getElementById("startQuizButton");
+
+const directQuizButton =
+    document.getElementById("directQuizButton");
+
+const methodMessage =
+    document.getElementById("methodMessage");
+
+const quizSection =
+    document.getElementById("quizSection");
+
+const quizForm =
+    document.getElementById("quizForm");
+
+const quizQuestions =
+    document.getElementById("quizQuestions");
+
+const quizTitle =
+    document.getElementById("quizTitle");
+
+const quizMessage =
+    document.getElementById("quizMessage");
+
+const submitQuizButton =
+    document.getElementById("submitQuizButton");
+
+const refreshButton =
+    document.getElementById("refreshButton");
+
+
+// ==========================================
+// LEARNER ID
+// ==========================================
+
 function getLearnerId() {
-    const storageKey = "alee_learner_id";
-    let learnerId = Number(localStorage.getItem(storageKey));
 
-    if (!Number.isSafeInteger(learnerId) || learnerId <= 0) {
-        learnerId = Date.now();
-        localStorage.setItem(storageKey, String(learnerId));
+    const storageKey = "alee_learner_id";
+
+    let learnerId = localStorage.getItem(storageKey);
+
+    if (!learnerId) {
+
+        learnerId = String(Date.now());
+
+        localStorage.setItem(storageKey, learnerId);
+
     }
 
     return learnerId;
+
 }
 
-function showEstimate(estimate) {
+
+// ==========================================
+// API HELPER
+// ==========================================
+
+async function apiRequest(path, options = {}) {
+
+    let response;
+
+    try {
+
+        response = await fetch(`${API_BASE}${path}`, {
+
+            ...options,
+
+            headers: {
+
+                ...(options.headers || {}),
+
+                "Content-Type": "application/json"
+
+            }
+
+        });
+
+    } catch (error) {
+
+        throw new Error(
+            "Could not connect to the backend. Check your internet connection, backend status, and CORS settings."
+        );
+
+    }
+
+    const responseText = await response.text();
+
+    let data = {};
+
+    try {
+
+        data = responseText ? JSON.parse(responseText) : {};
+
+    } catch {
+
+        throw new Error(
+            `The backend returned an invalid response. HTTP ${response.status}.`
+        );
+
+    }
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.detail ||
+            data.message ||
+            `HTTP ${response.status}`
+        );
+
+    }
+
+    return data;
+
+}
+
+
+// ==========================================
+// DISPLAY INITIAL LEVEL ESTIMATE
+// ==========================================
+
+function displayEstimate(data) {
+
     estimateResult.replaceChildren();
 
     const heading = document.createElement("h3");
-    heading.textContent = "Your Initial Level Estimate";
+
+    heading.textContent = "ALEE Initial Level Estimate";
+
     estimateResult.appendChild(heading);
 
+    const estimate = data.initial_estimate || {};
+
     const details = [
+
         ["Estimated level", estimate.estimated_level],
-        ["Confidence score", `${estimate.confidence}%`],
+
+        ["Confidence", estimate.confidence],
+
         ["Evidence", estimate.evidence]
+
     ];
 
     for (const [label, value] of details) {
+
+        if (value === undefined || value === null) continue;
+
         const paragraph = document.createElement("p");
+
         const strong = document.createElement("strong");
 
         strong.textContent = `${label}: `;
+
         paragraph.appendChild(strong);
+
         paragraph.appendChild(
-            document.createTextNode(String(value ?? "Not available"))
+            document.createTextNode(String(value))
         );
 
         estimateResult.appendChild(paragraph);
+
     }
 
     estimateResult.classList.remove("hidden");
+
 }
 
+
+// ==========================================
+// UPDATE PLACEMENT TEST LINK
+// ==========================================
+
+function updatePlacementTestLink() {
+
+    const learnerId = getLearnerId();
+
+    placementTestLink.href =
+        `${PLACEMENT_TEST_URL}?learner_id=${encodeURIComponent(learnerId)}`;
+
+}
+
+updatePlacementTestLink();
+
+
+// ==========================================
+// LEARNER INTERVIEW
+// ==========================================
+
 interviewForm.addEventListener("submit", async (event) => {
+
     event.preventDefault();
 
-    const submitButton = document.getElementById("submitInterview");
+    const submitButton =
+        document.getElementById("submitInterview");
+
     submitButton.disabled = true;
-    interviewMessage.textContent = "Saving your profile and estimating your level...";
+
+    interviewMessage.textContent =
+        "Saving your learning profile...";
+
     estimateResult.classList.add("hidden");
+
+    const formData = new FormData(interviewForm);
 
     const learnerId = getLearnerId();
 
     const profile = {
+
         id: learnerId,
-        name: interviewForm.elements.name.value.trim(),
-        age: Number(interviewForm.elements.age.value),
-        goal: interviewForm.elements.goal.value.trim(),
-        years_learning: Number(interviewForm.elements.years_learning.value),
-        days_per_week: Number(interviewForm.elements.days_per_week.value),
-        minutes_per_session: Number(interviewForm.elements.minutes_per_session.value),
-        learning_consistency: interviewForm.elements.learning_consistency.value,
-        learning_mode: interviewForm.elements.learning_mode.value,
-        formal_learning: interviewForm.elements.formal_learning.checked,
-        self_study: interviewForm.elements.self_study.checked,
-        skills_practiced: interviewForm.elements.skills_practiced.value.trim(),
+
+        name: formData.get("name"),
+
+        age: Number(formData.get("age")),
+
+        goal: formData.get("goal"),
+
+        years_learning:
+            Number(formData.get("years_learning")),
+
+        days_per_week:
+            Number(formData.get("days_per_week")),
+
+        minutes_per_session:
+            Number(formData.get("minutes_per_session")),
+
+        learning_consistency:
+            formData.get("learning_consistency"),
+
+        learning_mode:
+            formData.get("learning_mode"),
+
+        formal_learning:
+            formData.get("formal_learning") === "on",
+
+        self_study:
+            formData.get("self_study") === "on",
+
+        skills_practiced:
+            formData.get("skills_practiced"),
+
         previous_level:
-            interviewForm.elements.previous_level.value === "unknown"
+            formData.get("previous_level") === "unknown"
                 ? ""
-                : interviewForm.elements.previous_level.value,
+                : formData.get("previous_level"),
+
         recent_breaks:
-            interviewForm.elements.recent_breaks.value.trim() ||
+            formData.get("recent_breaks").trim() ||
             "Not specified"
+
     };
 
     try {
-        // First, save the learner profile.
-        const profileResponse = await fetch(
-            `${API_BASE}/learner/profile`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(profile)
-            }
-        );
 
-        if (!profileResponse.ok) {
-            throw new Error(
-                `Profile save failed: HTTP ${profileResponse.status}`
-            );
-        }
+        await apiRequest("/learner/profile", {
 
-        // Then, request the initial level estimate.
-        const estimateResponse = await fetch(
-            `${API_BASE}/learner/analyze`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(profile)
-            }
-        );
+            method: "POST",
 
-        if (!estimateResponse.ok) {
-            throw new Error(
-                `Level estimate failed: HTTP ${estimateResponse.status}`
-            );
-        }
+            body: JSON.stringify(profile)
 
-        const data = await estimateResponse.json();
+        });
 
-        showEstimate(data.initial_estimate);
+        const data = await apiRequest("/learner/analyze", {
 
-        // Pass this learner's ID to the placement test.
-        placementTestLink.href =
-            `https://alee-placement-test.onrender.com/?learner_id=${learnerId}`;
+            method: "POST",
+
+            body: JSON.stringify({
+
+                learner_id: learnerId
+
+            })
+
+        });
+
+        displayEstimate(data);
 
         interviewMessage.textContent =
-            "Profile saved. Your initial estimate is ready. Next, take the placement test.";
+            "Your profile has been saved and your initial estimate is ready.";
 
     } catch (error) {
+
         interviewMessage.textContent =
-            "Could not complete the interview. Please try again.";
+            `Could not save your profile: ${error.message}`;
 
         console.error("Interview submission failed:", error);
+
     } finally {
+
         submitButton.disabled = false;
+
     }
+
 });
-        function addResultLine(label, value) {
-            if (
-                value === undefined ||
-                value === null ||
-                value === ""
-            ) {
-                return;
-            }
 
-            const line = document.createElement("p");
-            const strong = document.createElement("strong");
 
-            strong.textContent = label + ": ";
-            line.appendChild(strong);
-            line.appendChild(
-                document.createTextNode(String(value))
-            );
+// ==========================================
+// THREE-METHOD EXPERIMENT
+// ==========================================
 
-            resultBox.appendChild(line);
-        }
+const experimentMethods = [
+    "music",
+    "story",
+    "animation"
+];
 
-        async function loadNextStep() {
-            try {
-                const response = await fetch(
-                    `${API_BASE}/learner/${getLearnerId()}/next-step`
-                );
+let currentMethodIndex = 0;
 
-                if (!response.ok) {
-                    throw new Error(
-                        `Backend returned ${response.status}`
-                    );
-                }
+let currentQuiz = null;
 
-                const data = await response.json();
-                const nextStep = data.next_step;
 
-                if (nextStep && nextStep.message) {
-                    message.textContent = nextStep.message;
-                } else {
-                    message.textContent =
-                        "Complete your English placement test to begin your learning journey.";
-                }
+// ==========================================
+// OPEN LEARNING ACTIVITIES
+// ==========================================
 
-                status.textContent = "ALEE backend connected.";
-                return true;
-            } catch (error) {
-                message.textContent =
-                    "Could not load your next learning step.";
+// The Canva link is now a normal HTML link.
+// No window.open() is needed.
 
-                status.textContent =
-                    "The backend may be starting, or its endpoint may need checking. Please try refreshing.";
 
-                console.error("Next-step request failed:", error);
-                return false;
-            }
-        }
+document.getElementById("learningActivitiesLink")
+    .addEventListener("click", () => {
 
-        async function loadLatestResult() {
-            resultBox.replaceChildren();
-            resultBox.classList.add("hidden");
+        methodMessage.textContent =
+            "Learning activities opened. Complete Music, Story, and Animation, then return here to start the quizzes.";
 
-            try {
-                const response = await fetch(
-                    `${API_BASE}/diagnostic/latest`,
-                    { cache: "no-store" }
-                );
+    });
 
-                if (response.status === 404) {
-                    message.textContent =
-                        "No placement-test result has been saved yet.";
 
-                    status.textContent =
-                        "Complete the test. If you have already completed it, verify that the test sends its result to ALEE.";
+// ==========================================
+// START QUIZ FLOW
+// ==========================================
 
-                    return;
-                }
+async function startQuizFlow() {
 
-                if (!response.ok) {
-                    throw new Error(
-                        `Backend returned ${response.status}`
-                    );
-                }
+    currentMethodIndex = 0;
 
-                const data = await response.json();
+    currentQuiz = null;
 
-                const result =
-                    data.result ??
-                    data.diagnostic_result ??
-                    data;
+    quizForm.reset();
 
-                addResultLine(
-                    "English level",
-                    result.level ??
-                    result.cefr_level ??
-                    result.overall_level
-                );
+    quizQuestions.replaceChildren();
 
-                addResultLine(
-                    "Overall score",
-                    result.score ??
-                    result.percentage ??
-                    result.overall_percentage
-                );
+    quizMessage.textContent = "";
 
-                addResultLine(
-                    "Correct answers",
-                    result.correct_answers ?? result.correct
-                );
+    // IMPORTANT:
+    // Reveal the quiz section BEFORE making the API request.
+    // This ensures loading and error messages are visible.
 
-                addResultLine(
-                    "Incorrect answers",
-                    result.incorrect_answers ?? result.incorrect
-                );
+    quizSection.classList.remove("hidden");
 
-                addResultLine(
-                    "Total questions",
-                    result.total_questions ?? result.total
-                );
+    quizSection.scrollIntoView({
 
-                const skills =
-                    result.skills ?? result.skill_results;
+        behavior: "smooth",
 
-                if (
-                    skills &&
-                    typeof skills === "object" &&
-                    !Array.isArray(skills)
-                ) {
-                    const heading = document.createElement("h3");
-                    heading.textContent = "Skill results";
-                    resultBox.appendChild(heading);
+        block: "start"
 
-                    for (
-                        const [skillName, skillData]
-                        of Object.entries(skills)
-                    ) {
-                        let details;
+    });
 
-                        if (
-                            typeof skillData === "object" &&
-                            skillData !== null
-                        ) {
-                            details = [
-                                skillData.level
-                                    ? `Level: ${skillData.level}`
-                                    : null,
+    startQuizButton.disabled = true;
 
-                                skillData.percentage != null
-                                    ? `Score: ${skillData.percentage}%`
-                                    : null,
+    directQuizButton.disabled = true;
 
-                                skillData.score != null
-                                    ? `Score: ${skillData.score}`
-                                    : null
-                            ].filter(Boolean).join(" | ");
-                        } else {
-                            details = String(skillData);
-                        }
+    try {
 
-                        addResultLine(skillName, details);
-                    }
-                }
+        await loadCurrentMethodQuiz();
 
-                if (!resultBox.hasChildNodes()) {
-                    addResultLine(
-                        "Saved result",
-                        "A result was returned, but its field names need to be matched to the backend response."
-                    );
-                }
+    } finally {
 
-                resultBox.classList.remove("hidden");
-                message.textContent =
-                    "Your latest placement-test result";
+        startQuizButton.disabled = false;
 
-                status.textContent =
-                    "Result retrieved from the ALEE backend.";
-            } catch (error) {
-                message.textContent =
-                    "Your result could not be loaded.";
+        directQuizButton.disabled = false;
 
-                status.textContent =
-                    "The backend request failed. Check the endpoint and browser console for details.";
+    }
 
-                console.error("Latest-result request failed:", error);
-            }
-        }
+}
 
-        async function refreshPageData() {
-            refreshButton.disabled = true;
-            refreshButton.textContent = "Refreshing...";
 
-            try {
-                await Promise.all([
-                    loadNextStep(),
-                    loadLatestResult()
-                ]);
-            } finally {
-                refreshButton.disabled = false;
-                refreshButton.textContent = "Refresh My Results";
-            }
-        }
+// Both buttons start exactly the same quiz flow.
 
-        refreshButton.addEventListener(
-            "click",
-            refreshPageData
+startQuizButton.addEventListener(
+    "click",
+    startQuizFlow
+);
+
+directQuizButton.addEventListener(
+    "click",
+    startQuizFlow
+);
+
+
+// ==========================================
+// LOAD CURRENT METHOD QUIZ
+// ==========================================
+
+async function loadCurrentMethodQuiz() {
+
+    const method = experimentMethods[currentMethodIndex];
+
+    // Keep the quiz section visible even during loading.
+
+    quizSection.classList.remove("hidden");
+
+    quizTitle.textContent =
+        `${method.toUpperCase()} Vocabulary Quiz`;
+
+    quizMessage.textContent =
+        `Loading ${method} quiz...`;
+
+    submitQuizButton.disabled = true;
+
+    quizQuestions.replaceChildren();
+
+    currentQuiz = null;
+
+    try {
+
+        const data = await apiRequest(
+            `/experiments/quiz/${method}`
         );
 
-        refreshPageData();
-    </script>
+        if (
+            !data ||
+            !Array.isArray(data.questions) ||
+            data.questions.length === 0
+        ) {
+
+            throw new Error(
+                "The backend returned an empty or invalid quiz."
+            );
+
+        }
+
+        // Validate the question structure before rendering.
+
+        for (const question of data.questions) {
+
+            if (
+                question.id === undefined ||
+                !question.question ||
+                !question.options ||
+                typeof question.options !== "object"
+            ) {
+
+                throw new Error(
+                    "One or more questions have an invalid format."
+                );
+
+            }
+
+        }
+
+        currentQuiz = data;
+
+        quizTitle.textContent =
+            `${method.charAt(0).toUpperCase() + method.slice(1)} Vocabulary Quiz (${currentMethodIndex + 1} of 3)`;
+
+        data.questions.forEach((question, index) => {
+
+            const card = document.createElement("div");
+
+            card.className = "quiz-question";
+
+            const heading = document.createElement("h3");
+
+            heading.textContent =
+                `Question ${index + 1}: ${question.word || ""}`;
+
+            const prompt = document.createElement("p");
+
+            prompt.textContent = question.question;
+
+            card.append(heading, prompt);
+
+            for (
+                const [optionKey, optionText]
+                of Object.entries(question.options)
+            ) {
+
+                const label = document.createElement("label");
+
+                label.className = "quiz-option";
+
+                const radio = document.createElement("input");
+
+                radio.type = "radio";
+
+                radio.name = `question_${question.id}`;
+
+                radio.value = optionKey;
+
+                radio.required = true;
+
+                const span = document.createElement("span");
+
+                span.textContent =
+                    `${optionKey}. ${optionText}`;
+
+                label.append(radio, span);
+
+                card.appendChild(label);
+
+            }
+
+            quizQuestions.appendChild(card);
+
+        });
+
+        submitQuizButton.disabled = false;
+
+        submitQuizButton.textContent =
+            currentMethodIndex === 2
+                ? "Submit Animation and View Final Report"
+                : "Submit and Continue";
+
+        quizMessage.textContent =
+            `Complete all ${data.questions.length} ${method} questions.`;
+
+    } catch (error) {
+
+        currentQuiz = null;
+
+        quizMessage.textContent =
+            `Could not load ${method} quiz: ${error.message}`;
+
+        console.error("Quiz loading failed:", error);
+
+        quizQuestions.replaceChildren();
+
+        const errorText = document.createElement("p");
+
+        errorText.textContent =
+            "The quiz could not be loaded. You can try again.";
+
+        quizQuestions.appendChild(errorText);
+
+        const retryButton = document.createElement("button");
+
+        retryButton.type = "button";
+
+        retryButton.className = "button secondary";
+
+        retryButton.textContent =
+            `Retry Loading ${method} Quiz`;
+
+        retryButton.addEventListener("click", async () => {
+
+            retryButton.disabled = true;
+
+            retryButton.textContent = "Retrying...";
+
+            await loadCurrentMethodQuiz();
+
+        });
+
+        quizQuestions.appendChild(retryButton);
+
+    }
+
+}
+
+
+// ==========================================
+// SUBMIT QUIZ
+// ==========================================
+
+quizForm.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+
+    if (!currentQuiz) {
+
+        quizMessage.textContent =
+            "No quiz is currently loaded. Please try loading it again.";
+
+        return;
+
+    }
+
+    const method = experimentMethods[currentMethodIndex];
+
+    const answers = currentQuiz.questions.map(question => {
+
+        const selected = quizForm.querySelector(
+            `input[name="question_${question.id}"]:checked`
+        );
+
+        return {
+
+            question_id: question.id,
+
+            selected_option:
+                selected ? selected.value : null
+
+        };
+
+    });
+
+    if (answers.some(answer => !answer.selected_option)) {
+
+        quizMessage.textContent =
+            "Please answer every question before continuing.";
+
+        return;
+
+    }
+
+    submitQuizButton.disabled = true;
+
+    quizMessage.textContent =
+        `Saving ${method} result...`;
+
+    try {
+
+        const data = await apiRequest(
+            "/experiments/submit",
+            {
+
+                method: "POST",
+
+                body: JSON.stringify({
+
+                    learner_id: getLearnerId(),
+
+                    method,
+
+                    answers
+
+                })
+
+            }
+        );
+
+        if (!data || !data.result) {
+
+            throw new Error(
+                "The backend did not return a valid quiz result."
+            );
+
+        }
+
+        const score = data.result.score;
+
+        const total = data.result.total_questions;
+
+        const percentage = data.result.percentage;
+
+        quizForm.reset();
+
+        currentQuiz = null;
+
+        if (
+            currentMethodIndex <
+            experimentMethods.length - 1
+        ) {
+
+            currentMethodIndex += 1;
+
+            quizMessage.textContent =
+                `${method} saved: ${score}/${total} (${percentage}%). Loading the next quiz...`;
+
+            await loadCurrentMethodQuiz();
+
+        } else {
+
+            quizSection.classList.add("hidden");
+
+            quizMessage.textContent =
+                `All three quizzes are complete. Animation: ${score}/${total} (${percentage}%). Your report is ready below.`;
+
+            await refreshExperimentResults();
+
+            document.getElementById(
+                "experimentResultsSection"
+            ).scrollIntoView({
+
+                behavior: "smooth",
+
+                block: "start"
+
+            });
+
+        }
+
+    } catch (error) {
+
+        quizMessage.textContent =
+            `Could not submit ${method} answers: ${error.message}`;
+
+        console.error("Quiz submission failed:", error);
+
+        submitQuizButton.disabled = false;
+
+    }
+
+});
+
+
+// ==========================================
+// DISPLAY EXPERIMENT RESULTS
+// ==========================================
+
+function addResultLine(container, label, value) {
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+
+        return;
+
+    }
+
+    const paragraph = document.createElement("p");
+
+    const strong = document.createElement("strong");
+
+    strong.textContent = `${label}: `;
+
+    paragraph.appendChild(strong);
+
+    paragraph.appendChild(
+        document.createTextNode(String(value))
+    );
+
+    container.appendChild(paragraph);
+
+}
+
+
+// ==========================================
+// REFRESH EXPERIMENT RESULTS
+// ==========================================
+
+async function refreshExperimentResults() {
+
+    const learnerId = getLearnerId();
+
+    const encodedLearnerId =
+        encodeURIComponent(learnerId);
+
+    resultBox.replaceChildren();
+
+    resultBox.classList.add("hidden");
+
+    try {
+
+        const resultsData = await apiRequest(
+            `/experiments/results/${encodedLearnerId}`
+        );
+
+        const comparisonData = await apiRequest(
+            `/experiments/comparison/${encodedLearnerId}`
+        );
+
+        if (
+            !resultsData ||
+            !Array.isArray(resultsData.results) ||
+            !comparisonData ||
+            !comparisonData.comparison
+        ) {
+
+            throw new Error(
+                "The backend returned an incomplete experiment report."
+            );
+
+        }
+
+        // Check completion status.
+
+        if (!comparisonData.all_methods_completed) {
+
+            const progressHeading =
+                document.createElement("h3");
+
+            progressHeading.textContent =
+                "Experiment Progress";
+
+            resultBox.appendChild(progressHeading);
+
+            for (const method of experimentMethods) {
+
+                const item =
+                    comparisonData.comparison[method] || {};
+
+                addResultLine(
+                    resultBox,
+                    method.toUpperCase(),
+                    item.status === "completed"
+                        ? "Completed"
+                        : "Not completed"
+                );
+
+            }
+
+            addResultLine(
+                resultBox,
+                "Next step",
+                "Complete all three quizzes to unlock your final report."
+            );
+
+            resultBox.classList.remove("hidden");
+
+            return;
+
+        }
+
+
+        // Get personalized feedback.
+
+        const feedbackData = await apiRequest(
+            `/experiments/feedback/${encodedLearnerId}`
+        );
+
+        if (
+            !feedbackData ||
+            !feedbackData.analysis ||
+            !feedbackData.personalized_feedback
+        ) {
+
+            throw new Error(
+                "Personalized feedback is incomplete."
+            );
+
+        }
+
+
+        // Report heading.
+
+        const heading = document.createElement("h3");
+
+        heading.textContent = "Your Experiment Results";
+
+        resultBox.appendChild(heading);
+
+
+        // Individual results.
+
+        resultsData.results.forEach((item, index) => {
+
+            const card = document.createElement("div");
+
+            card.className = "result-card";
+
+            const title = document.createElement("h3");
+
+            title.textContent =
+                `${index + 1}. ${(item.method || "Unknown").toUpperCase()}`;
+
+            card.appendChild(title);
+
+            addResultLine(
+                card,
+                "Score",
+                `${item.score} / ${item.total_questions}`
+            );
+
+            addResultLine(
+                card,
+                "Percentage",
+                `${item.percentage}%`
+            );
+
+            addResultLine(
+                card,
+                "Vocabulary set",
+                item.vocabulary_set_id
+            );
+
+            resultBox.appendChild(card);
+
+        });
+
+
+        // Method comparison.
+
+        const comparisonHeading =
+            document.createElement("h3");
+
+        comparisonHeading.textContent =
+            "Method Comparison";
+
+        resultBox.appendChild(comparisonHeading);
+
+        for (const method of experimentMethods) {
+
+            const item =
+                comparisonData.comparison[method] || {};
+
+            const card = document.createElement("div");
+
+            card.className = "result-card";
+
+            const title = document.createElement("h3");
+
+            title.textContent =
+                method.charAt(0).toUpperCase() +
+                method.slice(1);
+
+            card.appendChild(title);
+
+            if (
+                item.status === "completed" &&
+                item.latest_result
+            ) {
+
+                addResultLine(
+                    card,
+                    "Attempts",
+                    item.attempts
+                );
+
+                addResultLine(
+                    card,
+                    "Latest score",
+                    `${item.latest_result.score}/${item.latest_result.total_questions}`
+                );
+
+                addResultLine(
+                    card,
+                    "Latest percentage",
+                    `${item.latest_result.percentage}%`
+                );
+
+            } else {
+
+                addResultLine(
+                    card,
+                    "Status",
+                    "Not completed"
+                );
+
+            }
+
+            resultBox.appendChild(card);
+
+        }
+
+        addResultLine(
+            resultBox,
+            "All methods completed",
+            comparisonData.all_methods_completed ? "Yes" : "Not yet"
+        );
+
+
+        // Personalized feedback.
+
+        const feedbackHeading =
+            document.createElement("h3");
+
+        feedbackHeading.textContent =
+            "ALEE's Analysis";
+
+        resultBox.appendChild(feedbackHeading);
+
+        addResultLine(
+            resultBox,
+            "Interpretation",
+            feedbackData.analysis.interpretation
+        );
+
+        addResultLine(
+            resultBox,
+            "Feedback",
+            feedbackData.personalized_feedback.feedback
+        );
+
+        addResultLine(
+            resultBox,
+            "Recommendation",
+            feedbackData.personalized_feedback.recommendation
+        );
+
+
+        // Next learning step.
+
+        const nextStepData = await apiRequest(
+            `/learner/${encodedLearnerId}/next-step`
+        );
+
+        const nextStep =
+            nextStepData.next_step || {};
+
+        const nextHeading =
+            document.createElement("h3");
+
+        nextHeading.textContent =
+            "Your Next Step";
+
+        resultBox.appendChild(nextHeading);
+
+        addResultLine(
+            resultBox,
+            "Recommended stage",
+            nextStep.stage
+        );
+
+        addResultLine(
+            resultBox,
+            "Recommended action",
+            nextStep.action
+        );
+
+        addResultLine(
+            resultBox,
+            "Reason",
+            nextStep.message
+        );
+
+        if (nextStep.url) {
+
+            try {
+
+                const nextUrl = new URL(nextStep.url);
+
+                if (
+                    nextUrl.protocol === "https:" ||
+                    nextUrl.protocol === "http:"
+                ) {
+
+                    const link = document.createElement("a");
+
+                    link.href = nextUrl.href;
+
+                    link.target = "_blank";
+
+                    link.rel = "noopener noreferrer";
+
+                    link.textContent = "Continue Learning";
+
+                    resultBox.appendChild(link);
+
+                }
+
+            } catch (error) {
+
+                console.warn("Invalid next-step URL:", error);
+
+            }
+
+        }
+
+
+        // Limitations.
+
+        const limitationsHeading =
+            document.createElement("h3");
+
+        limitationsHeading.textContent =
+            "Important Notes";
+
+        resultBox.appendChild(limitationsHeading);
+
+        const limitations =
+            feedbackData.analysis.limitations;
+
+        if (Array.isArray(limitations)) {
+
+            for (const limitation of limitations) {
+
+                const paragraph =
+                    document.createElement("p");
+
+                paragraph.textContent = `• ${limitation}`;
+
+                resultBox.appendChild(paragraph);
+
+            }
+
+        }
+
+
+        // Success.
+
+        resultBox.classList.remove("hidden");
+
+        message.textContent =
+            "Your experiment results have been retrieved.";
+
+        status.textContent =
+            "ALEE backend connected. Experiment analysis updated.";
+
+    } catch (error) {
+
+        message.textContent =
+            "Could not load your experiment results.";
+
+        status.textContent =
+            error.message;
+
+        console.error(
+            "Experiment results request failed:",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// LOAD NEXT LEARNING STEP
+// ==========================================
+
+async function loadNextStep() {
+
+    try {
+
+        const learnerId = getLearnerId();
+
+        const data = await apiRequest(
+            `/learner/${encodeURIComponent(learnerId)}/next-step`
+        );
+
+        if (data.next_step && data.next_step.message) {
+
+            message.textContent =
+                data.next_step.message;
+
+        }
+
+        status.textContent =
+            "ALEE backend connected.";
+
+    } catch (error) {
+
+        message.textContent =
+            "Could not load your next learning step.";
+
+        status.textContent =
+            error.message;
+
+        console.error(
+            "Next-step request failed:",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// REFRESH PAGE DATA
+// ==========================================
+
+async function refreshPageData() {
+
+    refreshButton.disabled = true;
+
+    refreshButton.textContent = "Refreshing...";
+
+    try {
+
+        await loadNextStep();
+
+        await refreshExperimentResults();
+
+    } finally {
+
+        refreshButton.disabled = false;
+
+        refreshButton.textContent = "Refresh My Results";
+
+    }
+
+}
+
+
+// ==========================================
+// REFRESH BUTTON EVENT
+// ==========================================
+
+refreshButton.addEventListener(
+    "click",
+    refreshPageData
+);
+
+
+// ==========================================
+// INITIAL PAGE LOAD
+// ==========================================
+
+loadNextStep();
+
+refreshExperimentResults();
+
+</script>
+
 </body>
 </html>
-```
